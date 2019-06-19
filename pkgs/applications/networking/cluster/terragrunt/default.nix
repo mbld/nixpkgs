@@ -35,6 +35,12 @@ rec {
       };
     } // attrs');
 
+  # Recent version.
+  terragrunt_0_19 = generic {
+    goDeps = ./deps_0_19.nix;
+    sha256 = "0j7287g9lw06xvbxv9xi0g8zib0fbkihy67g7n1yygh9c3dbdxxi";
+    version = "0.19.3";
+  };
 
   # Last minor version that maintains compatibility with Terraform 0.11.x
   terragrunt_0_18 = generic {

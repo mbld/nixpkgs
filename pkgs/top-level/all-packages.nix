@@ -23812,6 +23812,7 @@ in
   inherit (callPackage ../applications/networking/cluster/terragrunt {})
     terragrunt_0_17
     terragrunt_0_18
+    terragrunt_0_19
     ;
   terragrunt = terragrunt_0_17;
 
