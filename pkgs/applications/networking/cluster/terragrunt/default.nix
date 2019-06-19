@@ -1,35 +1,48 @@
 { stdenv, lib, buildGoPackage, fetchFromGitHub, terraform, makeWrapper }:
+rec {
+  generic = { goDeps, version, sha256, ... }@attrs:
+    let attrs' = builtins.removeAttrs attrs ["version" "sha256"]; in
+    buildGoPackage ({
+      name = "terragrunt-${version}";
 
-buildGoPackage rec {
-  name = "terragrunt-${version}";
-  version = "0.17.4";
+      goPackagePath = "github.com/gruntwork-io/terragrunt";
 
-  goPackagePath = "github.com/gruntwork-io/terragrunt";
+      src = fetchFromGitHub {
+        owner  = "gruntwork-io";
+        repo   = "terragrunt";
+        rev    = "v${version}";
+        inherit sha256;
+      };
 
-  src = fetchFromGitHub {
-    owner  = "gruntwork-io";
-    repo   = "terragrunt";
-    rev    = "v${version}";
+      inherit goDeps;
+
+      buildInputs = [ makeWrapper ];
+
+      preBuild = ''
+        buildFlagsArray+=("-ldflags" "-X main.VERSION=v${version}")
+      '';
+
+      postInstall = ''
+        wrapProgram $bin/bin/terragrunt \
+          --set TERRAGRUNT_TFPATH ${lib.getBin terraform}/bin/terraform
+      '';
+
+      meta = with stdenv.lib; {
+        description = "A thin wrapper for Terraform that supports locking for Terraform state and enforces best practices.";
+        homepage = https://github.com/gruntwork-io/terragrunt/;
+        license = licenses.mit;
+        maintainers = with maintainers; [ peterhoeg ];
+      };
+    } // attrs');
+
+
+  };
+
+  # Version before providing multiple versions of this package.
+  terragrunt_0_17 = generic {
+    goDeps = ./deps.nix;
     sha256 = "13hlv0ydmv8gpzgg6bfr7rp89xfw1bkgd0j684armw8zq29cmv3a";
+    version = "0.17.4";
   };
 
-  goDeps = ./deps.nix;
-
-  buildInputs = [ makeWrapper ];
-
-  preBuild = ''
-    buildFlagsArray+=("-ldflags" "-X main.VERSION=v${version}")
-  '';
-
-  postInstall = ''
-    wrapProgram $bin/bin/terragrunt \
-      --set TERRAGRUNT_TFPATH ${lib.getBin terraform.full}/bin/terraform
-  '';
-
-  meta = with stdenv.lib; {
-    description = "A thin wrapper for Terraform that supports locking for Terraform state and enforces best practices.";
-    homepage = https://github.com/gruntwork-io/terragrunt/;
-    license = licenses.mit;
-    maintainers = with maintainers; [ peterhoeg ];
-  };
 }

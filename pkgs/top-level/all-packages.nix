@@ -23809,7 +23809,10 @@ in
 
   terraform-landscape = callPackage ../applications/networking/cluster/terraform-landscape {};
 
-  terragrunt = callPackage ../applications/networking/cluster/terragrunt {};
+  inherit (callPackage ../applications/networking/cluster/terragrunt {})
+    terragrunt_0_17
+    ;
+  terragrunt = terragrunt_0_17;
 
   tilt = callPackage ../applications/networking/cluster/tilt {};
 
