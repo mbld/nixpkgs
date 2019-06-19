@@ -35,6 +35,13 @@ rec {
       };
     } // attrs');
 
+  # Does not work beacuse of an error during build.
+  # terragrunt_0_19 = generic {
+  #   goDeps = ./deps_0_19.nix;
+  #   sha256 = "091sjp0rw0mx9s5jbkg72xgq5x092zh83y7i0gzin4n6p2v3jy19";
+  #   version = "0.19.4";
+  # };
+
   # Recent version.
   terragrunt_0_19 = generic {
     goDeps = ./deps_0_19.nix;
