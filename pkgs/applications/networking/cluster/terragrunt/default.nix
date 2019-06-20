@@ -1,6 +1,6 @@
-{ stdenv, lib, buildGoPackage, fetchFromGitHub, terraform, makeWrapper }:
+{ stdenv, lib, buildGoPackage, fetchFromGitHub, terraform_0_11, terraform_0_12, makeWrapper }:
 rec {
-  generic = { goDeps, version, sha256, ... }@attrs:
+  generic = { goDeps, version, sha256, terraform,... }@attrs:
     let attrs' = builtins.removeAttrs attrs ["version" "sha256"]; in
     buildGoPackage ({
       name = "terragrunt-${version}";
@@ -46,6 +46,7 @@ rec {
   terragrunt_0_19 = generic {
     goDeps = ./deps_0_19.nix;
     sha256 = "0j7287g9lw06xvbxv9xi0g8zib0fbkihy67g7n1yygh9c3dbdxxi";
+    terraform = terraform_0_12;
     version = "0.19.3";
   };
 
@@ -53,6 +54,7 @@ rec {
   terragrunt_0_18 = generic {
     goDeps = ./deps_0_18.nix;
     sha256 = "08q6k03agq45p97b56n8dbj1khxcmw6vgc0r9zgbqxpkrq3r3vh6";
+    terraform = terraform_0_11;
     version = "0.18.7";
   };
 
@@ -60,6 +62,7 @@ rec {
   terragrunt_0_17 = generic {
     goDeps = ./deps_0_17.nix;
     sha256 = "13hlv0ydmv8gpzgg6bfr7rp89xfw1bkgd0j684armw8zq29cmv3a";
+    terraform = terraform_0_11;
     version = "0.17.4";
   };
 
